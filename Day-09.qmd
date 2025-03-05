@@ -1,0 +1,63 @@
+---
+title: "Day-09.R"
+format:
+  html:
+    self:contained: True
+execute:
+  echo: True
+editor: visual
+---
+
+## 
+
+```{r}
+options(repos = c(CRAN = "https://cran.rstudio.com"))
+
+install.packages("visdat")
+library(visdat)
+vis_dat(airquality)
+```
+
+```{r}
+install.packages("broom")
+library(broom)
+broom::tidy(airquality)
+
+### it needs cleaning because of absent values in the df
+```
+
+```{r}
+df <- data.frame(airquality)
+df
+```
+
+```{r}
+model <- lm(Ozone ~ Day, data = airquality)
+
+### I chose days as the increment to see the differences over time/ if daily events drastically ## imapct AQI
+```
+
+```{r}
+summary(model)
+print(plot)
+
+### Yes the model does seem valid.
+
+### The R^2 suggest only a slight correlation
+```
+
+```{r}
+a <- broom::augment(model)
+a
+```
+
+```{r}
+library(ggplot2)
+ggplot(a, aes(x = Ozone, y = .fitted )) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = "red") +
+  labs(title = "Actual vs Predicted Ozone",
+       subtitle = paste("Correlation:", round(cor(a$Ozone, a$.fitted), 2)),
+       x = "Actual Ozone", y = "Predicted Ozone") +
+  theme_linedraw()
+```
